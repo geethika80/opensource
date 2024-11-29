@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XML Data Display</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .book {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Library Books</h1>
+  <div id="books"></div>
+
+  <script>
+    async function fetchXML() {
+      const response = await fetch('sample.xml');
+      const xmlText = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+
+      const books = xmlDoc.getElementsByTagName('book');
+      const booksContainer = document.getElementById('books');
+
+      for (let book of books) {
+        const title = book.getElementsByTagName('title')[0].textContent;
+        const author = book.getElementsByTagName('author')[0].textContent;
+        const year = book.getElementsByTagName('year')[0].textContent;
+
+        const bookDiv = document.createElement('div');
+        bookDiv.className = 'book';
+        bookDiv.innerHTML = `<h2>${title}</h2>
+                             <p><strong>Author:</strong> ${author}</p>
+                             <p><strong>Year:</strong> ${year}</p>`;
+        booksContainer.appendChild(bookDiv);
+      }
+    }
+
+    fetchXML();
+  </script>
+</body>
+</html>
